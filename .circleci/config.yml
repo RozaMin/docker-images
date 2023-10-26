@@ -4,10 +4,14 @@ workflows:
   main:
     jobs:
       - build:
-        context: [DOCKERHUB]
+          context: [DOCKERHUB]
+          project_names: "dotnet6-aws2"
 
 jobs:
   build:
+    parameters:
+      project_names:
+        type: string
     working_directory: /app
     docker:
       - image: docker:17.05.0-ce-git
@@ -28,7 +32,7 @@ jobs:
           name: Build Docker images
           command: |
             ls -al;
-            docker_files="dotnet6-aws2"
+            docker_files="<< parameters.project_names >>"
             echo "$docker_files";
             for docker_file in $(echo "$docker_files" | tr ',' ' ')
             do
@@ -50,8 +54,6 @@ jobs:
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
               echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
 
-              login="$(aws ecr get-login)"
-              ${login}
               docker tag app "${ECR_ENDPOINT}/app:${CIRCLE_SHA1}"
               docker push "${ECR_ENDPOINT}/app:${CIRCLE_SHA1}"
             fi
