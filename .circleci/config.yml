@@ -26,18 +26,16 @@ jobs:
               docker build --cache-from=app -t $docker_file -f ./$docker_file .;
             done
       - when:
-        condition:
-          and:
-            - equal: [ master, << pipeline.git.branch >> ]
-        steps:
-          - run:
-              name: Push Docker images
-              command: |
-                echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-                
-                docker_files="<< parameters.project_names >>"
-                for docker_file in $(echo "$docker_files" | tr ',' ' ')
-                do
-                  docker tag $docker_file rozamin/$docker_file
-                  docker push rozamin/$docker_file
-                done
+          condition: [ master, << pipeline.git.branch >> ]
+          steps:
+            - run:
+                name: Push Docker images
+                command: |
+                  echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+                  
+                  docker_files="<< parameters.project_names >>"
+                  for docker_file in $(echo "$docker_files" | tr ',' ' ')
+                  do
+                    docker tag $docker_file rozamin/$docker_file
+                    docker push rozamin/$docker_file
+                  done
