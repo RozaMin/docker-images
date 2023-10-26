@@ -26,7 +26,8 @@ jobs:
               docker build --cache-from=app -t $docker_file -f ./$docker_file .;
             done
       - when:
-          condition: [ master, << pipeline.git.branch >> ]
+          condition:
+            equal: [ master, << pipeline.git.branch >> ]
           steps:
             - run:
                 name: Push Docker images
