@@ -22,8 +22,9 @@ jobs:
             set +o pipefail
             docker load -i /caches/app.tar | true
       - run:
-          name: Build application Docker image
+          name: Build Docker images
           command: |
+            ls -al;
             docker_files="<< parameters.docker_files >>"
             for docker_file in $(echo "$docker_files" | tr ',' ' ')
             do
@@ -39,7 +40,7 @@ jobs:
           paths:
             - /caches/app.tar
       - deploy:
-          name: Push application Docker image
+          name: Push Docker images
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
               login="$(aws ecr get-login)"
