@@ -49,7 +49,7 @@ jobs:
           name: Push Docker images
           command: |
             #if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+              docker login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_PASS"
               
             docker_files="<< parameters.project_names >>"
             for docker_file in $(echo "$docker_files" | tr ',' ' ')
