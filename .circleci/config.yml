@@ -1,10 +1,10 @@
 version: 2
 jobs:
   build:
-    parameters:
-      docker_files:
-        type: string
-        default: "dotnet6-aws2"
+    # parameters:
+    #   docker_files:
+    #     type: string
+    #     default: "dotnet6-aws2"
     working_directory: /app
     docker:
       - image: docker:17.05.0-ce-git
@@ -25,7 +25,7 @@ jobs:
           name: Build Docker images
           command: |
             ls -al;
-            docker_files="<< parameters.docker_files >>"
+            docker_files="dotnet6-aws2"
             echo "$docker_files";
             for docker_file in $(echo "$docker_files" | tr ',' ' ')
             do
@@ -45,6 +45,8 @@ jobs:
           name: Push Docker images
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+
               login="$(aws ecr get-login)"
               ${login}
               docker tag app "${ECR_ENDPOINT}/app:${CIRCLE_SHA1}"
