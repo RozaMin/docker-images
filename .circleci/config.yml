@@ -31,13 +31,10 @@ jobs:
       - run:
           name: Build Docker images
           command: |
-            ls -al;
             docker_files="<< parameters.project_names >>"
-            echo "$docker_files";
             for docker_file in $(echo "$docker_files" | tr ',' ' ')
             do
-              echo "$docker_file";
-              docker build --cache-from=app -t app -f ./$docker_file .;
+              docker build --cache-from=app -t $docker_file -f ./$docker_file .;
             done
       - run:
           name: Save Docker image layer cache
@@ -48,12 +45,15 @@ jobs:
           key: v1-{{ .Branch }}-{{ epoch }}
           paths:
             - /caches/app.tar
-      - deploy:
+      - run:
           name: Push Docker images
           command: |
-            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+            #if [ "${CIRCLE_BRANCH}" == "master" ]; then
               echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-
-              docker tag app "${ECR_ENDPOINT}/app:${CIRCLE_SHA1}"
-              docker push "${ECR_ENDPOINT}/app:${CIRCLE_SHA1}"
-            fi
+              
+            docker_files="<< parameters.project_names >>"
+            for docker_file in $(echo "$docker_files" | tr ',' ' ')
+            do
+              docker push $docker_file
+            done
+            #fi
