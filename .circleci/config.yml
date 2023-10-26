@@ -26,6 +26,7 @@ jobs:
           command: |
             ls -al;
             docker_files="<< parameters.docker_files >>"
+            echo "$docker_files";
             for docker_file in $(echo "$docker_files" | tr ',' ' ')
             do
               echo "$docker_file";
