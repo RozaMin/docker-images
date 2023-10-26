@@ -28,7 +28,8 @@ jobs:
             docker_files="<< parameters.docker_files >>"
             for docker_file in $(echo "$docker_files" | tr ',' ' ')
             do
-                docker build --cache-from=app -t app -f ./$docker_file .
+              echo "$docker_file";
+              docker build --cache-from=app -t app -f ./$docker_file .;
             done
       - run:
           name: Save Docker image layer cache
