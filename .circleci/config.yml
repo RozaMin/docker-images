@@ -23,7 +23,7 @@ jobs:
             docker_files="<< parameters.project_names >>"
             for docker_file in $(echo "$docker_files" | tr ',' ' ')
             do
-              docker build --cache-from=app -t $docker_file -f ./$docker_file .;
+              docker build -t $docker_file -f ./$docker_file .;
             done
       - when:
           condition:
