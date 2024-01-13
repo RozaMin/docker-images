@@ -2,7 +2,7 @@ FROM  mcr.microsoft.com/dotnet/sdk:6.0
 
 # Installing dependencies
 RUN   apt-get update -y \
-      && apt-get install -y curl unzip zip tar gzip gnupg software-properties-common jq \
+      && apt-get install -y curl unzip zip tar gzip gnupg software-properties-common jq less \
       && apt-get clean \
       && rm -rf /var/lib/apt/lists/*;
 
